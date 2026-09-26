@@ -1,0 +1,23 @@
+[
+  {
+    "id": "STU-2001",
+    "name": "Ananya Roy",
+    "email": "ananya.roy@example.com",
+    "course": "Computer Science",
+    "addedAt": "26/09/2026"
+  },
+  {
+    "id": "STU-2002",
+    "name": "Karthik Reddy",
+    "email": "karthik.reddy@example.com",
+    "course": "Electronics & Communication",
+    "addedAt": "26/09/2026"
+  },
+  {
+    "id": "STU-2003",
+    "name": "Meera Nambiar",
+    "email": "meera.nambiar@example.com",
+    "course": "Business Administration",
+    "addedAt": "26/09/2026"
+  }
+]

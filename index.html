@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Modern and responsive Student Record Manager web application to add, search, validate, and export student data.">
+  <title>Student Record Manager</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Background decorative blurs -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+
+  <div class="app-wrapper">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-brand">
+          <div class="brand-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h1 class="header-title">Student Record Manager</h1>
+            <p class="header-subtitle">Manage, validate, save, and import student information effortlessly</p>
+          </div>
+        </div>
+        
+        <!-- Summary Stats Badges -->
+        <div class="stats-bar">
+          <div class="stat-pill">
+            <span class="stat-label"><i class="fa-solid fa-users"></i> Total Students:</span>
+            <span id="statTotalStudents" class="stat-value">0</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label"><i class="fa-solid fa-book-open"></i> Courses:</span>
+            <span id="statTotalCourses" class="stat-value">0</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-container">
+      
+      <!-- Left Column: Student Registration Form -->
+      <section class="card form-card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <i class="fa-solid fa-user-plus card-header-icon"></i>
+            <h2>Student Registration</h2>
+          </div>
+          <span class="badge-pill">Input Form</span>
+        </div>
+
+        <form id="studentForm" novalidate>
+          <!-- Student ID Field -->
+          <div class="form-group">
+            <label for="studentId">
+              <i class="fa-solid fa-id-card"></i> Student ID <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="studentId" 
+                name="studentId" 
+                placeholder="e.g. STU-101" 
+                autocomplete="off"
+                required
+              >
+              <i class="fa-solid fa-fingerprint input-icon"></i>
+            </div>
+            <small class="field-hint">Unique alphanumeric identifier</small>
+          </div>
+
+          <!-- Student Name Field -->
+          <div class="form-group">
+            <label for="studentName">
+              <i class="fa-solid fa-user"></i> Student Name <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="studentName" 
+                name="studentName" 
+                placeholder="e.g. Priya Sharma" 
+                autocomplete="off"
+                required
+              >
+              <i class="fa-solid fa-signature input-icon"></i>
+            </div>
+            <small class="field-hint">Full name of the student</small>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="studentEmail">
+              <i class="fa-solid fa-envelope"></i> Email Address <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="email" 
+                id="studentEmail" 
+                name="studentEmail" 
+                placeholder="e.g. priya.sharma@example.com" 
+                autocomplete="off"
+                required
+              >
+              <i class="fa-solid fa-at input-icon"></i>
+            </div>
+            <small class="field-hint">Validated via JavaScript Regular Expression</small>
+          </div>
+
+          <!-- Course Field -->
+          <div class="form-group">
+            <label for="studentCourse">
+              <i class="fa-solid fa-graduation-cap"></i> Course <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input 
+                type="text" 
+                id="studentCourse" 
+                name="studentCourse" 
+                list="courseSuggestions" 
+                placeholder="e.g. Computer Science" 
+                autocomplete="off"
+                required
+              >
+              <i class="fa-solid fa-layer-group input-icon"></i>
+              <datalist id="courseSuggestions">
+                <option value="Computer Science">
+                <option value="Information Technology">
+                <option value="Data Science & AI">
+                <option value="Electronics & Communication">
+                <option value="Mechanical Engineering">
+                <option value="Civil Engineering">
+                <option value="Business Administration">
+                <option value="Biotechnology">
+              </datalist>
+            </div>
+            <small class="field-hint">Select a suggestion or type custom course</small>
+          </div>
+
+          <!-- Action Buttons Group -->
+          <div class="form-actions">
+            <!-- Add Student Button -->
+            <button type="submit" id="btnAddStudent" class="btn btn-primary">
+              <i class="fa-solid fa-plus-circle"></i> Add Student
+            </button>
+            
+            <!-- Clear Form Button -->
+            <button type="button" id="btnClearForm" class="btn btn-secondary">
+              <i class="fa-solid fa-rotate-left"></i> Clear Form
+            </button>
+          </div>
+
+          <!-- File Storage & I/O Actions -->
+          <div class="file-actions-panel">
+            <div class="file-actions-label">
+              <i class="fa-solid fa-hard-drive"></i> Backup & File Operations:
+            </div>
+            <div class="file-actions-buttons">
+              <!-- Save Data Button -->
+              <button type="button" id="btnSaveData" class="btn btn-success" title="Download records as students.json">
+                <i class="fa-solid fa-download"></i> Save Data
+              </button>
+
+              <!-- Read Data Button -->
+              <button type="button" id="btnReadData" class="btn btn-info" title="Upload and read students.json">
+                <i class="fa-solid fa-upload"></i> Read Data
+              </button>
+            </div>
+            <!-- Hidden File Input for FileReader -->
+            <input type="file" id="fileInput" accept=".json,application/json" class="hidden-file-input">
+          </div>
+        </form>
+      </section>
+
+      <!-- Right Column: Student Records Table & Controls -->
+      <section class="card table-card">
+        <div class="card-header table-card-header">
+          <div class="card-title-group">
+            <i class="fa-solid fa-table-list card-header-icon"></i>
+            <h2>Enrolled Students</h2>
+          </div>
+          
+          <!-- Live Search Box -->
+          <div class="search-box-wrapper">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input 
+              type="text" 
+              id="searchBox" 
+              placeholder="Search by student name..." 
+              autocomplete="off"
+            >
+            <button type="button" id="btnClearSearch" class="btn-clear-search" title="Clear search" style="display: none;">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Table Status Bar -->
+        <div class="table-meta-bar">
+          <span id="recordCountText" class="record-count-text">Showing 0 records</span>
+          <span class="storage-tag"><i class="fa-solid fa-database"></i> Auto-synced with localStorage</span>
+        </div>
+
+        <!-- Student Records Table Wrapper -->
+        <div class="table-responsive">
+          <table class="student-table" id="studentTable">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 50px;">#</th>
+                <th scope="col"><i class="fa-solid fa-id-badge"></i> Student ID</th>
+                <th scope="col"><i class="fa-solid fa-user"></i> Student Name</th>
+                <th scope="col"><i class="fa-solid fa-envelope"></i> Email</th>
+                <th scope="col"><i class="fa-solid fa-book"></i> Course</th>
+                <th scope="col" style="width: 90px; text-align: center;"><i class="fa-solid fa-gear"></i> Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTableBody">
+              <!-- Dynamically populated rows will appear here -->
+            </tbody>
+          </table>
+
+          <!-- Empty State Container -->
+          <div id="emptyState" class="empty-state">
+            <div class="empty-icon-wrap">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h3>No Student Records Found</h3>
+            <p>Add a new student using the form on the left or click <strong>Read Data</strong> to import a <code>students.json</code> file.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Student Record Manager &bull; Pure Client-Side JavaScript Application &bull; Safe, Local &amp; Backend-Free</p>
+    </footer>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
